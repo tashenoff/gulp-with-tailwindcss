@@ -16,7 +16,7 @@ const { src, dest, task, watch, series, parallel } = require('gulp');
 const del = require('del'); //For Cleaning build/dist for fresh export
 const options = require("./config"); //paths and other options from config.js
 const browserSync = require('browser-sync').create();
-
+const nunjucks = require('gulp-nunjucks') // import nunjucks lib
 const sass = require('gulp-sass'); //For Compiling SASS files
 const postcss = require('gulp-postcss'); //For Compiling tailwind utilities with tailwind config
 const concat = require('gulp-concat'); //For Concatinating js,css files
@@ -50,12 +50,14 @@ function previewReload(done){
 
 //Development Tasks
 function devHTML(){
-  return src(`${options.paths.src.base}/**/*.html`).pipe(dest(options.paths.dist.base));
+  return src(`${options.paths.src.base}/**/*.html`)
+  .pipe(nunjucks.compile())
+  .pipe(dest(options.paths.dist.base));
 } 
 
 function devStyles(){
   const tailwindcss = require('tailwindcss'); 
-  return src(`${options.paths.src.css}/**/*`).pipe(sass().on('error', sass.logError))
+  return src([`${options.paths.src.css}/**/*`, `${options.paths.src.css}/*`]).pipe(sass().on('error', sass.logError))
     .pipe(postcss([
       tailwindcss(options.config.tailwindjs),
       require('autoprefixer'),
@@ -91,7 +93,9 @@ function devClean(){
 
 //Production Tasks (Optimized Build for Live/Production Sites)
 function prodHTML(){
-  return src(`${options.paths.src.base}/**/*.html`).pipe(dest(options.paths.build.base));
+  return src(`${options.paths.src.base}/**/*.html`)
+  .pipe(nunjucks.compile())
+  .pipe(dest(options.paths.build.base));
 }
 
 function prodStyles(){
