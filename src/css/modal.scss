@@ -1,13 +1,8 @@
-.modal {
-    background-color: rgba(0, 0, 0, 0.5);
-    opacity: 0;
-    visibility: hidden;
-    transform: scale(1.1);
-    transition: visibility 0s linear 0.25s, opacity 0.25s 0s, transform 0.25s;
+.modal__overlay {
+  background: rgba(0,0,0,0.6);
+  
   }
-  .modal-content {
-   
-  }
+
   .close-button {
     float: right;
     width: 1.5rem;
@@ -20,10 +15,58 @@
   .close-button:hover {
     background-color: darkgray;
   }
-  .show-modal {
-    opacity: 1;
-    visibility: visible;
-    transform: scale(1);
-    transition: visibility 0s linear 0s, opacity 0.25s 0s, transform 0.25s;
-  }
-  
+
+.micromodal-slide {
+  visibility: hidden;
+}
+
+.micromodal-slide.is-open {
+  visibility: visible;
+}
+
+
+
+/**************************\
+  Demo Animation Style
+\**************************/
+@keyframes mmfadeIn {
+  from { opacity: 0; }
+    to { opacity: 1; }
+}
+
+@keyframes mmfadeOut {
+  from { opacity: 1; }
+    to { opacity: 0; }
+}
+
+@keyframes mmslideIn {
+from { transform: translateY(15%); }
+  to { transform: translateY(0); }
+}
+
+@keyframes mmslideOut {
+  from { transform: translateY(0); }
+  to { transform: translateY(-10%); }
+}
+
+
+.micromodal-slide[aria-hidden="false"] .modal__overlay {
+animation: mmfadeIn .3s cubic-bezier(0.0, 0.0, 0.2, 1);
+}
+
+.micromodal-slide[aria-hidden="false"] .modal-content {
+animation: mmslideIn .3s cubic-bezier(0, 0, .2, 1);
+}
+
+.micromodal-slide[aria-hidden="true"] .modal__overlay {
+animation: mmfadeOut .3s cubic-bezier(0.0, 0.0, 0.2, 1);
+}
+
+.micromodal-slide[aria-hidden="true"] .modal-content {
+animation: mmslideOut .3s cubic-bezier(0, 0, .2, 1);
+}
+
+.micromodal-slide .modal-content,
+.micromodal-slide .modal__overlay{
+will-change: transform;
+}
